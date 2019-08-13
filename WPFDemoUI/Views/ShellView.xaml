@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDemoUI.Views"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d" FontSize="20"
         Title="ShellView" Height="450" Width="800">
     <Grid>
@@ -14,10 +16,57 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DataGrid x:Name="People" AutoGenerateColumns="False"
+        <DataGrid ItemsSource="{Binding  PeopleCollection}" AutoGenerateColumns="False"
                   CanUserAddRows="False" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Full Name" Binding="{Binding Path=FullName}"/>
+                <DataGridTemplateColumn Header="Full Name"
+                                        CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=FullName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{TemplateBinding Content}"/>
+                                <Expander Grid.Column="1 ">
+                                    <Border BorderThickness="1"
+                                            Margin="-90 0 0 0">
+                                        <StackPanel Margin="0 4 0 0">
+                                            <TextBox x:Name="searchFullName" ToolTip="Enter Filter Criterea" />
+                                            <!---Filter Buttons-->
+                                            <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
+                                                <Button Content="Apply" MinWidth="40">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Click">
+                                                            <cal:ActionMessage MethodName="FilterFullName">
+                                                                <cal:Parameter Value="{Binding ElementName=searchFullName, Path=Text}" />
+                                                            </cal:ActionMessage>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Button>
+                                                <Button Content="Clear" MinWidth="40">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Click">
+                                                            <cal:ActionMessage MethodName="ClearFilterFullName">
+                                                            </cal:ActionMessage>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn Header="Is Alive" Binding="{Binding Path=IsAlive}"/>
                 <DataGridTemplateColumn Header="Primary Address">
                     <DataGridTemplateColumn.CellTemplate>
