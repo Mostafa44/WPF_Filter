@@ -16,7 +16,8 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DataGrid ItemsSource="{Binding  PeopleCollection}" AutoGenerateColumns="False"
+        <DataGrid ItemsSource="{Binding  PeopleCollection}"
+                  AutoGenerateColumns="False"
                   CanUserAddRows="False" >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Full Name"
@@ -42,7 +43,7 @@
                                             <!---Filter Buttons-->
                                             <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
-                                                <Button Content="Apply" MinWidth="40">
+                                                <Button Content="Apply" Width="auto" Margin="2 2 2 2">
                                                     <i:Interaction.Triggers>
                                                         <i:EventTrigger EventName="Click">
                                                             <cal:ActionMessage MethodName="FilterFullName">
@@ -51,10 +52,11 @@
                                                         </i:EventTrigger>
                                                     </i:Interaction.Triggers>
                                                 </Button>
-                                                <Button Content="Clear" MinWidth="40">
+                                                <Button Content="Clear"  Width="auto" Margin="2 2 2 2">
                                                     <i:Interaction.Triggers>
                                                         <i:EventTrigger EventName="Click">
-                                                            <cal:ActionMessage MethodName="ClearFilterFullName">
+                                                            <cal:ActionMessage MethodName="RemoveFilter">
+                                                                <cal:Parameter Value="FilterFullName" />
                                                             </cal:ActionMessage>
                                                         </i:EventTrigger>
                                                     </i:Interaction.Triggers>
@@ -71,7 +73,7 @@
                 <DataGridTemplateColumn Header="Primary Address">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=AddressString}"/>
+                            <TextBlock Text="{Binding Path=PrimaryAddress.FullAddress}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -86,6 +88,47 @@
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{TemplateBinding Content}"/>
+                                <Expander Grid.Column="1 ">
+                                    <Border BorderThickness="1"
+                                            Margin="-90 0 0 0">
+                                        <StackPanel Margin="0 4 0 0">
+                                            <TextBox x:Name="searchPrimaryAddress" ToolTip="Enter Filter Criterea" />
+                                            <!---Filter Buttons-->
+                                            <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
+                                                <Button Content="Apply" Width="auto" Margin="2 2 2 2">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Click">
+                                                            <cal:ActionMessage MethodName="FilterAddress">
+                                                                <cal:Parameter Value="{Binding ElementName=searchPrimaryAddress, Path=Text}" />
+                                                            </cal:ActionMessage>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Button>
+                                                <Button Content="Clear"  Width="auto" Margin="2 2 2 2">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Click">
+                                                            <cal:ActionMessage MethodName="RemoveFilter">
+                                                                <cal:Parameter Value="FilterAddress" />
+                                                            </cal:ActionMessage>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Birth Date">
                     <DataGridTemplateColumn.CellTemplate>
@@ -101,5 +144,10 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Grid.Row="3" 
+                Grid.Column="0" 
+                Content="OpenFilterWinow"
+                MaxWidth="170"
+                x:Name="OpenPopup"/>
     </Grid>
 </Window>
