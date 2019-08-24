@@ -10,15 +10,32 @@
         Title="ShellView" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox Grid.Row="0" Grid.ColumnSpan="2"
+            ItemsSource="{Binding Filters}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox  VerticalContentAlignment="Center" 
+                               IsChecked="{Binding Path= IsFilterChecked}"
+                               Content="{Binding Path= FilterName}"/>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <DataGrid ItemsSource="{Binding  PeopleCollection}"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="False" >
+                  CanUserAddRows="False"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="2">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Full Name"
                                         CanUserSort="True">
@@ -145,9 +162,14 @@
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="3" 
-                Grid.Column="0" 
-                Content="OpenFilterWinow"
-                MaxWidth="170"
+                Grid.Column="1" 
+                Content="Open Filter Window"
+                MaxWidth="190"
                 x:Name="OpenPopup"/>
+        <Button Grid.Row="3" 
+                Grid.Column="0" 
+                Content="Clear All Filters"
+                MaxWidth="170"
+                x:Name="ClearFilters"/>
     </Grid>
 </Window>

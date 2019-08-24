@@ -69,6 +69,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Messages\FilterDataGridMessage.cs" />
+    <Compile Include="Messages\FilterItemMessage.cs" />
+    <Compile Include="ViewModels\FilterItemViewModel.cs" />
     <Compile Include="ViewModels\PopupWindowViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\PopupWindowView.xaml.cs">

@@ -84,6 +84,19 @@ namespace WPFDemoUI.ViewModels
                 NotifyOfPropertyChange(() => TextContent);
             }
         }
+
+        private string _filterName;
+
+        public string FilterName
+        {
+            get { return _filterName; }
+            set
+            {
+                _filterName = value;
+                NotifyOfPropertyChange(() => FilterName);
+            }
+        }
+
         public void ApplyFilter(UserControl u)
         {
             var filterMsg = new FilterDataGridMessage();
@@ -107,8 +120,31 @@ namespace WPFDemoUI.ViewModels
                 }
             }
         }
-       
 
+        public void AddFilter(UserControl u)
+        {
+            var filterMsg = new FilterItemMessage();
+            filterMsg.Name = FilterName;
+            if (HasFullName && !string.IsNullOrWhiteSpace(FullName))
+            {
+                filterMsg.RequiredFilters.Add(nameof(FullName), FullName);
+            }
+            if (HasAddress && !string.IsNullOrWhiteSpace(Address))
+            {
+                filterMsg.RequiredFilters.Add(nameof(Address), Address);
+            }
+
+            _eventAgg.PublishOnUIThread(filterMsg);
+
+            //if (u != null)
+            {
+                Window parentWindow = Window.GetWindow(u);
+                if (parentWindow != null)
+                {
+                    parentWindow.Close();
+                }
+            }
+        }
     }
 
 

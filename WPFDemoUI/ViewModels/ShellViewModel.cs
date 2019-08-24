@@ -3,6 +3,7 @@ using DemoLibrary;
 using DemoLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -15,10 +16,10 @@ using WPFDemoUI.Messages;
 namespace WPFDemoUI.ViewModels
 {
     [Export]
-    public class ShellViewModel: IHandle<FilterDataGridMessage>
+    public class ShellViewModel: IHandle<FilterDataGridMessage>,IHandle<FilterItemMessage>
     {
         private readonly IWindowManager _windowManager;
-
+        public ObservableCollection<FilterItemViewModel> Filters { get; set; }
         public BindableCollection<PersonModel> People { get; set; }
         public ICollectionView PeopleCollection { get; set; }
         // public ICommand FilterFullNameCommand { get; set; }
@@ -34,6 +35,8 @@ namespace WPFDemoUI.ViewModels
             DataAccess da = new DataAccess();
             _windowManager = windowManager;
             People = new BindableCollection<PersonModel>(da.GetPeople());
+            Filters = new BindableCollection<FilterItemViewModel>();
+            Filters.Add(new FilterItemViewModel() { FilterName = "HardCoded Filter", IsFilterChecked = false });
             PeopleCollection = CollectionViewSource.GetDefaultView(People);
             PeopleCollection.Filter = FilterPeople;
             //FilterFullNameCommand = new RelayCommand
@@ -104,6 +107,17 @@ namespace WPFDemoUI.ViewModels
                 AddFilterAndRefresh("Address", PersonModel => PersonModel.PrimaryAddress.FullAddress.Contains(message.RequestedFilters.GetValueOrDefault("Address")));
             }
            
+        }
+
+        public void Handle(FilterItemMessage message)
+        {
+            var filterItemVM = new FilterItemViewModel()
+            {
+                FilterName = message.Name,
+                RequestedFilters = message.RequiredFilters
+            };
+
+            Filters.Add(filterItemVM);
         }
     }
 }
