@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Messages\FilterActionMessage.cs" />
     <Compile Include="Messages\FilterDataGridMessage.cs" />
     <Compile Include="Messages\FilterItemMessage.cs" />
     <Compile Include="ViewModels\FilterItemViewModel.cs" />

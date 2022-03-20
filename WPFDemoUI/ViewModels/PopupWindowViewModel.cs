@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using WPFDemoUI.Messages;
 namespace WPFDemoUI.ViewModels
 {
     [Export]
-    public class PopupWindowViewModel : PropertyChangedBase
+    public class PopupWindowViewModel : PropertyChangedBase, IDataErrorInfo
     {
         private IEventAggregator _eventAgg;
         private string _textContent;
@@ -23,7 +24,7 @@ namespace WPFDemoUI.ViewModels
         private bool _hasAddres;
 
         private bool _hasFullName;
-       
+
 
         public bool HasFullName
         {
@@ -73,7 +74,7 @@ namespace WPFDemoUI.ViewModels
         {
             _textContent = textContent;
             _eventAgg = IoC.Get<IEventAggregator>();
-          
+
         }
         public string TextContent
         {
@@ -94,6 +95,30 @@ namespace WPFDemoUI.ViewModels
             {
                 _filterName = value;
                 NotifyOfPropertyChange(() => FilterName);
+            }
+        }
+
+        public string Error
+        {
+            get { return null; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                if (columnName == "FilterName")
+                {
+                    CanAddFilter = !string.IsNullOrEmpty(FilterName);
+                    if (string.IsNullOrEmpty(FilterName))
+                    {
+                        result = "Please Enter a Name for this filter";
+                        
+                    }
+                   
+                }
+                return result;
             }
         }
 
@@ -120,6 +145,19 @@ namespace WPFDemoUI.ViewModels
                 }
             }
         }
+
+        private bool _canAddFilter;
+
+        public bool CanAddFilter
+        {
+            get { return _canAddFilter; }
+            set
+            {
+                _canAddFilter = value;
+                NotifyOfPropertyChange(() => CanAddFilter);
+            }
+        }
+
 
         public void AddFilter(UserControl u)
         {

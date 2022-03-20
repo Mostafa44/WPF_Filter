@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFDemoUI.Messages;
 
 namespace WPFDemoUI.ViewModels
 {
@@ -11,6 +12,8 @@ namespace WPFDemoUI.ViewModels
     {
         private string _filterName;
         private bool _isFilterChecked;
+        private IEventAggregator _eventAgg;
+
         public string FilterName
         {
             get { return _filterName; }
@@ -21,8 +24,11 @@ namespace WPFDemoUI.ViewModels
             }
         }
 
-       
 
+        public FilterItemViewModel()
+        {
+            _eventAgg = IoC.Get<IEventAggregator>();
+        }
         public bool IsFilterChecked
         {
             get { return _isFilterChecked; }
@@ -34,5 +40,12 @@ namespace WPFDemoUI.ViewModels
         }
 
         public Dictionary<string, string> RequestedFilters { get; set; }
+
+        public void ApplyFilterItem()
+        {
+            var filterActionMessage = new FilterActionMessage();
+            filterActionMessage.RequestedFilters = RequestedFilters;
+            _eventAgg.PublishOnUIThread(filterActionMessage);
+        }
     }
 }

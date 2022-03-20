@@ -24,9 +24,18 @@
             ItemsSource="{Binding Filters}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox  VerticalContentAlignment="Center" 
-                               IsChecked="{Binding Path= IsFilterChecked}"
-                               Content="{Binding Path= FilterName}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path= FilterName}" />
+                        <Button Content="Apply" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <cal:ActionMessage MethodName="ApplyFilterItem">
+                                       
+                                    </cal:ActionMessage>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
 
                 </DataTemplate>
             </ListBox.ItemTemplate>

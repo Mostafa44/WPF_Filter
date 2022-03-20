@@ -16,7 +16,7 @@ using WPFDemoUI.Messages;
 namespace WPFDemoUI.ViewModels
 {
     [Export]
-    public class ShellViewModel: IHandle<FilterDataGridMessage>,IHandle<FilterItemMessage>
+    public class ShellViewModel: IHandle<FilterDataGridMessage>,IHandle<FilterItemMessage>, IHandle<FilterActionMessage>
     {
         private readonly IWindowManager _windowManager;
         public ObservableCollection<FilterItemViewModel> Filters { get; set; }
@@ -118,6 +118,20 @@ namespace WPFDemoUI.ViewModels
             };
 
             Filters.Add(filterItemVM);
+        }
+
+        public void Handle(FilterActionMessage message)
+        {
+            ClearFilters();
+            //Check for each criteria if found , then add a predicate for it
+            if (message.RequestedFilters.ContainsKey("FullName"))
+            {
+                AddFilterAndRefresh("FullName", PersonModel => PersonModel.FullName.Contains(message.RequestedFilters.GetValueOrDefault("FullName")));
+            }
+            if (message.RequestedFilters.ContainsKey("Address"))
+            {
+                AddFilterAndRefresh("Address", PersonModel => PersonModel.PrimaryAddress.FullAddress.Contains(message.RequestedFilters.GetValueOrDefault("Address")));
+            }
         }
     }
 }

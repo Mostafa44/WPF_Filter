@@ -16,6 +16,13 @@
             <Setter Property="FontSize" Value="15" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding Path=(Validation.Errors).CurrentItem.ErrorContent, RelativeSource={x:Static RelativeSource.Self}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -36,7 +43,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TextContent"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Text="Filter Name:"/>
-        <TextBox Grid.Row="2" Grid.Column="2" x:Name="FilterName"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding FilterName ,UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=true, NotifyOnValidationError=true}"/>
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Full Name:"/>
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="FullName"/>
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Address:"/>
